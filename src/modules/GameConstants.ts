@@ -409,7 +409,7 @@ export function humanifyString(str: string): string {
 }
 
 export function camelCaseToString(str: string): string {
-    return str.replace(/[\s_-]?([A-Z])/g, ' $1').replace(/\b\w/g, (w) => (w.replace(/\w/, (c) => c.toUpperCase()))).trim();
+    return str.replace(/[\s_-]?([A-Z])/g, ' $1').replace(/\b\w/g, (w) => (w.replace(/\w/, (c) => c.toUpperCase()))).trim().replace("E V", "EV");
 }
 
 export function pluralizeString(str: string, amt: number): string {
