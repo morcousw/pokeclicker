@@ -163,11 +163,35 @@ class MapHelper {
                 states.push(areaStatus.missingResistant);
             }
         }
+
+        // Is this location a Berry Trader
+        var berryListIndex = Object.values(GameConstants.BerryTraderLocations).indexOf(townName)
+        if (berryListIndex > -1)
+        {
+            var berryDeals = BerryDeal.list[berryListIndex]();
+            const berryTraderPokemon = berryDeals.filter(d => d.item.itemType instanceof PokemonItem).map(d => d.item.itemType.name) as PokemonNameType[];
+
+            if (!RouteHelper.listCompleted(berryTraderPokemon, true))
+            {
+                states.push(areaStatus.uncaughtShinyPokemon);
+            }
+            else if (RouteHelper.minPokerus(berryTraderPokemon) < 3)
+            {
+                states.push(areaStatus.missingResistant);
+            }
+
+        }
+
         const town = TownList[townName];
         town.content.forEach(c => {
+            if (townName == 'Pinkan Pokémon Reserve')
+            {
+            console.log(c);
+            }
             // If the town itself is not locked, it should never show locked
             if (c.areaStatus() != areaStatus.locked) {
-                states.push(c.areaStatus());
+            states.push(c.areaStatus());
+
             }
         });
         if (states.length) {
@@ -175,6 +199,7 @@ class MapHelper {
             if (importantState >= areaStatus.uncaughtShinyPokemon && states.includes(areaStatus.uncaughtShinyPokemon) && states.includes(areaStatus.missingAchievement)) {
                 return areaStatus[areaStatus.uncaughtShinyPokemonAndMissingAchievement];
             }
+            
             return areaStatus[importantState];
         }
         return areaStatus[areaStatus.completed];
